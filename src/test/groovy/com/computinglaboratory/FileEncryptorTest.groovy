@@ -13,23 +13,23 @@ class FileEncryptorTest extends Specification {
         Path encryptedFilePath = Path.of('encrypted.txt')
 
         when:
-        FileEncryptor.encryptFile(inputFilePath, encryptedFilePath, "secret")
+        FileEncryptor.encryptFile(inputFilePath, encryptedFilePath, "kjnsdfihsdidihbsdhjsddb")
 
         then:
         Files.exists(encryptedFilePath)
-        Files.delete(encryptedFilePath)
+        //Files.delete(encryptedFilePath)
     }
 
     def "decryptFile correctly decrypts files"() {
         given:
-        Path inputFilePath = Path.of('test/encrypted.txt')
+        Path inputFilePath = Path.of('encrypted.txt')
         Path decryptedFilePath = Path.of('decrypted.txt')
 
         when:
-        FileEncryptor.decryptFile(inputFilePath, decryptedFilePath, "secret")
+        FileEncryptor.decryptFile(inputFilePath, decryptedFilePath, "kjnsdfihsdidihbsdhjsddb")
 
         then:
         Files.exists(decryptedFilePath)
-        Files.delete(decryptedFilePath)
+        //Files.delete(decryptedFilePath)
     }
 }

@@ -4,12 +4,12 @@ import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -19,38 +19,67 @@ import java.security.spec.KeySpec;
 public class FileEncryptor {
 
     public static void encryptFile(Path decryptedFile, Path encryptedFile, String password) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IOException, IllegalBlockSizeException, BadPaddingException {
-        byte[] data = Files.readAllBytes(decryptedFile);
-        byte[] salt = {1,2,3};
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
-        SecretKey tmp = factory.generateSecret(spec);
-        SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
+        FileInputStream inFile = new FileInputStream(decryptedFile.toFile());
+        FileOutputStream outFile = new FileOutputStream(encryptedFile.toFile());
 
-        IvParameterSpec iv = new IvParameterSpec("xxxxxxxxxxxxxxxx".getBytes(StandardCharsets.UTF_8));
+        Cipher cipher = produceCipher(password.toCharArray(), Cipher.ENCRYPT_MODE);
 
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, secret, iv);
-        cipher.update(data);
-        byte[] encryptedData = cipher.doFinal();
-        Files.write(encryptedFile, encryptedData, StandardOpenOption.CREATE_NEW);
+        byte[] input = new byte[64];
+        int bytesRead;
+        while ((bytesRead = inFile.read(input)) != -1) {
+            byte[] output = cipher.update(input, 0, bytesRead);
+            if (output != null) {
+                outFile.write(output);
+            }
+        }
+
+        byte[] output = cipher.doFinal();
+        if (output != null) {
+            outFile.write(output);
+        }
+
+        inFile.close();
+        outFile.flush();
+        outFile.close();
     }
 
     public static void decryptFile(Path encryptedFile, Path decryptedFile, String password) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, InvalidAlgorithmParameterException {
-        byte[] data = Files.readAllBytes(encryptedFile);
+        FileInputStream inFile = new FileInputStream(encryptedFile.toFile());
+        FileOutputStream outFile = new FileOutputStream(decryptedFile.toFile());
 
-        byte[] salt = {1,2,3};
+        Cipher cipher = produceCipher(password.toCharArray(), Cipher.DECRYPT_MODE);
+
+        byte[] in = new byte[64];
+        int read;
+        while ((read = inFile.read(in)) != -1) {
+            byte[] output = cipher.update(in, 0, read);
+            if (output != null) {
+                outFile.write(output);
+            }
+        }
+
+        byte[] output = cipher.doFinal();
+        if (output != null) {
+            outFile.write(output);
+        }
+
+        inFile.close();
+        outFile.flush();
+        outFile.close();
+    }
+
+    private static Cipher produceCipher(char[] password, int mode) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
+        final byte[] salt = new String("euihewujsdsfi").getBytes();
+        final int iterationCount = 10000;
+        final int keyLength = 128;
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
+        KeySpec spec = new PBEKeySpec(password, salt, iterationCount, keyLength);
         SecretKey tmp = factory.generateSecret(spec);
         SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
-
-        IvParameterSpec iv = new IvParameterSpec("xxxxxxxxxxxxxxxx".getBytes(StandardCharsets.UTF_8));
-
+        IvParameterSpec iv = new IvParameterSpec("rgeerrtghfdhfgfg".getBytes(StandardCharsets.UTF_8));
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secret, iv);
-        cipher.update(data);
-        byte[] decrypted = cipher.doFinal();
-        Files.write(decryptedFile, decrypted, StandardOpenOption.CREATE_NEW);
+        cipher.init(mode, secret, iv);
+        return cipher;
     }
 
     public static void main(String[] args) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, InvalidKeySpecException, NoSuchAlgorithmException, IOException, BadPaddingException, InvalidKeyException {

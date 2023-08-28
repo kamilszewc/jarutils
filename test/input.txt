@@ -1,1 +1,4 @@
 To jest test
+Ten test jest nieco dłuższy
+Nie wiem o co chodzi
+Śmiesznie
