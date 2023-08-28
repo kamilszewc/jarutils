@@ -9,7 +9,7 @@ class FileEncryptorTest extends Specification {
 
     def "encryptFile correctly decrypts files"() {
         given:
-        Path inputFilePath = Path.of('test.txt')
+        Path inputFilePath = Path.of('test/input.txt')
         Path encryptedFilePath = Path.of('encrypted.txt')
 
         when:
@@ -17,11 +17,12 @@ class FileEncryptorTest extends Specification {
 
         then:
         Files.exists(encryptedFilePath)
+        Files.delete(encryptedFilePath)
     }
 
     def "decryptFile correctly decrypts files"() {
         given:
-        Path inputFilePath = Path.of('encrypted.txt')
+        Path inputFilePath = Path.of('test/encrypted.txt')
         Path decryptedFilePath = Path.of('decrypted.txt')
 
         when:
@@ -29,5 +30,6 @@ class FileEncryptorTest extends Specification {
 
         then:
         Files.exists(decryptedFilePath)
+        Files.delete(decryptedFilePath)
     }
 }

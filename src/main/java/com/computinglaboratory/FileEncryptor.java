@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -50,5 +51,23 @@ public class FileEncryptor {
         cipher.update(data);
         byte[] decrypted = cipher.doFinal();
         Files.write(decryptedFile, decrypted, StandardOpenOption.CREATE_NEW);
+    }
+
+    public static void main(String[] args) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, InvalidKeySpecException, NoSuchAlgorithmException, IOException, BadPaddingException, InvalidKeyException {
+        if (args.length != 4) {
+            System.err.println("Wrong arguments");
+            return;
+        }
+
+        Path inputFilename = Paths.get(args[1]);
+        Path outputFilename = Paths.get(args[2]);
+        String password = args[3];
+
+        if (args[0].equals("encrypt")) {
+            encryptFile(inputFilename, outputFilename, password);
+        } else {
+            decryptFile(inputFilename, outputFilename, password);
+        }
+
     }
 }

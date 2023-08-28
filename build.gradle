@@ -18,6 +18,7 @@ repositories {
 }
 
 dependencies {
+    // JUnit
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
@@ -64,7 +65,7 @@ publishing {
             from components.java
             pom {
                 name = 'Jar Utils'
-                description = 'Jar Utils'
+                description = 'Jar Utils - a set of random helper functions to manage jar files'
                 url = 'https://github.com/computinglaboratory/jarutils'
                 licenses {
                     license {
