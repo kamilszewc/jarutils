@@ -5,8 +5,8 @@ plugins {
     id 'groovy'
 }
 
-group = 'com.computinglaboratory'
-version = '0.2'
+group = 'io.github.kamilszewc'
+version = '0.3'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -67,6 +67,14 @@ publishing {
                 name = 'Jar Utils'
                 description = 'Jar Utils - a set of random helper functions to manage jar files'
                 url = 'https://github.com/computinglaboratory/jarutils'
+//                distributionManagement {
+//                    relocation {
+//                        groupId = 'io.github.kamilszewc'
+//                        artifactId = 'jarutils'
+//                        version = '0.3'
+//                        message = 'Project moved to io.github.kamilszewc:jarutils'
+//                    }
+//                }
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'

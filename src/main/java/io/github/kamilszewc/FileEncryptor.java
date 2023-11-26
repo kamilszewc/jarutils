@@ -1,4 +1,4 @@
-package com.computinglaboratory;
+package io.github.kamilszewc;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
