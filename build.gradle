@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'io.github.kamilszewc'
-version = '0.3'
+version = '0.4'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -23,7 +23,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
     // Testing
-    testImplementation 'org.apache.groovy:groovy-all:4.0.11'
+    testImplementation 'org.apache.groovy:groovy-all:4.0.15'
     testImplementation 'org.spockframework:spock-core:2.4-M1-groovy-4.0'
 }
 
@@ -67,14 +67,6 @@ publishing {
                 name = 'Jar Utils'
                 description = 'Jar Utils - a set of random helper functions to manage jar files'
                 url = 'https://github.com/computinglaboratory/jarutils'
-//                distributionManagement {
-//                    relocation {
-//                        groupId = 'io.github.kamilszewc'
-//                        artifactId = 'jarutils'
-//                        version = '0.3'
-//                        message = 'Project moved to io.github.kamilszewc:jarutils'
-//                    }
-//                }
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'

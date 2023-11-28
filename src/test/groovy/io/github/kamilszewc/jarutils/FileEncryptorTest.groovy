@@ -1,4 +1,4 @@
-package io.github.kamilszewc
+package io.github.kamilszewc.jarutils
 
 import spock.lang.Specification
 
