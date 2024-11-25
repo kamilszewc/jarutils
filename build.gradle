@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'io.github.kamilszewc'
-version = '0.4'
+version = '0.5'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -19,12 +19,12 @@ repositories {
 
 dependencies {
     // JUnit
-    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation platform('org.junit:junit-bom:5.11.3')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
     // Testing
-    testImplementation 'org.apache.groovy:groovy-all:4.0.15'
-    testImplementation 'org.spockframework:spock-core:2.4-M1-groovy-4.0'
+    testImplementation 'org.apache.groovy:groovy-all:4.0.24'
+    testImplementation 'org.spockframework:spock-core:2.4-M4-groovy-4.0'
 }
 
 java {
@@ -45,15 +45,12 @@ publishing {
         maven {
             name = "OSSRH"
             url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            try {
-                credentials {
-                    username = "$mavenCentralUser"
-                    password = "$mavenCentralPassword"
+            credentials {
+                if (project.properties.containsKey('mavenCentralTokenUser')) {
+                    username = "$mavenCentralTokenUser"
                 }
-            } catch (Exception ex) {
-                credentials {
-                    username = " "
-                    password = " "
+                if (project.properties.containsKey('mavenCentralTokenPassword')) {
+                    password = "$mavenCentralTokenPassword"
                 }
             }
         }
@@ -91,6 +88,7 @@ publishing {
 }
 
 signing {
+    useGpgCmd()
     sign publishing.publications.mavenJava
     sign configurations.archives
 }
